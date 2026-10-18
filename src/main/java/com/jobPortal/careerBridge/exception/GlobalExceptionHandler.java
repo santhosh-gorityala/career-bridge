@@ -34,6 +34,7 @@ public class GlobalExceptionHandler {
                 "VALIDATION_FAILED",
                 "Request Validation Failed",
                 request.getRequestURI(),
+                null,
                 errors
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
@@ -51,6 +52,7 @@ public class GlobalExceptionHandler {
                         "EMAIL_ALREADY_EXISTS",
                         ex.getMessage(),
                         request.getRequestURI(),
+                        null,
                         null
                 );
         return

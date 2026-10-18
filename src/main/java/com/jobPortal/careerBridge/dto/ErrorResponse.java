@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-@Setter
 @AllArgsConstructor
 public class ErrorResponse {
 
@@ -18,6 +17,7 @@ public class ErrorResponse {
     private String error;
     private String message;
     private String path;
+    private String requestId;
     private Map<String,String> errors = new HashMap<>();
 
 
