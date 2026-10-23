@@ -1,4 +1,4 @@
-package com.jobPortal.careerBridge.security;
+package com.jobPortal.careerBridge.service;
 
 import com.jobPortal.careerBridge.entity.EmailVerificationToken;
 import com.jobPortal.careerBridge.entity.User;
