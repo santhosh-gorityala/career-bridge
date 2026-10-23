@@ -80,6 +80,45 @@ public class GlobalExceptionHandler {
                 .body(error);
     }
 
+    @ExceptionHandler(InvalidEmailVerificationTokenException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidEmailVerficationToken(
+            InvalidEmailVerificationTokenException ex,
+            HttpServletRequest request
+    ){
+        ErrorResponse error =
+                new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.UNAUTHORIZED.value(),
+                        "INVALID_EMAIL_VERIFICATION_TOKEN",
+                        ex.getMessage(),
+                        request.getRequestURI(),
+                        null,
+                        null
+                );
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler(EmailSendingException.class)
+    public ResponseEntity<ErrorResponse> handleEmailSendingException(
+            EmailSendingException ex,
+            HttpServletRequest request) {
+
+        ErrorResponse error =
+                new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                        "EMAIL_SENDING_FAILED",
+                        "Unable to send verification email",
+                        request.getRequestURI(),
+                        null,
+                        null
+                );
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(error);
+    }
+
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAuthorizationDenied(
             AuthorizationDeniedException ex,

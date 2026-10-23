@@ -82,5 +82,9 @@ public class User {
      this.roles.remove(role);
     }
 
+    public void verifyEmail(){
+        this.emailVerified = true;
+    }
+
 
 }

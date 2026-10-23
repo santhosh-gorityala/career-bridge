@@ -9,6 +9,7 @@ import com.jobPortal.careerBridge.exception.EmailAlreadyExistsException;
 import com.jobPortal.careerBridge.repository.RoleRepository;
 import com.jobPortal.careerBridge.repository.UserRepository;
 import com.jobPortal.careerBridge.security.CustomUserDetails;
+import com.jobPortal.careerBridge.security.EmailVerificationService;
 import com.jobPortal.careerBridge.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class AuthService {
    private final AuthenticationManager authenticationManager;
    private final JwtService jwtService;
    private final RefreshTokenService refreshTokenService;
+   private final EmailVerificationService emailVerificationService;
+   private final EmailService emailService;
 
     @Autowired
     public AuthService(UserRepository userRepository,
@@ -38,13 +41,18 @@ public class AuthService {
                        RoleRepository roleRepository,
                        AuthenticationManager authenticationManager,
                        JwtService jwtService,
-                       RefreshTokenService refreshTokenService){
+                       RefreshTokenService refreshTokenService,
+                       EmailVerificationService emailVerificationService,
+                       EmailService emailService){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.refreshTokenService = refreshTokenService;
+        this.emailVerificationService = emailVerificationService;
+        this.emailService = emailService;
+
     }
 
     public UserResponse register(RegistrationRequest request){
@@ -70,6 +78,10 @@ public class AuthService {
         );
         user.addRole(jobSeekerRole);
         userRepository.save(user);
+        String emailVerificationToken =
+                emailVerificationService.
+                        createVerificationToken(user);
+        emailService.sendVerificationEmail(request.getEmail(),emailVerificationToken);
         return new UserResponse(
                 user.getId(),
                 user.getEmail(),
@@ -137,6 +149,11 @@ public class AuthService {
                         request.getRefreshToken()
                 );
         refreshToken.revoke();
+    }
+
+    @Transactional
+    public void verifyEmail(String rawToken){
+        emailVerificationService.verifyEmail(rawToken);
     }
 
 
