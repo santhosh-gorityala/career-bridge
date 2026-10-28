@@ -1,12 +1,14 @@
 package com.jobPortal.careerBridge.service;
 
-import com.jobPortal.careerBridge.dto.*;
-import com.jobPortal.careerBridge.entity.RefreshToken;
-import com.jobPortal.careerBridge.entity.Role;
-import com.jobPortal.careerBridge.entity.User;
-import com.jobPortal.careerBridge.entity.UserStatus;
+import com.jobPortal.careerBridge.dto.request.LoginRequest;
+import com.jobPortal.careerBridge.dto.request.RefreshTokenRequest;
+import com.jobPortal.careerBridge.dto.request.RegistrationRequest;
+import com.jobPortal.careerBridge.dto.response.LoginResponse;
+import com.jobPortal.careerBridge.dto.response.UserResponse;
+import com.jobPortal.careerBridge.entity.*;
 import com.jobPortal.careerBridge.exception.EmailAlreadyExistsException;
 import com.jobPortal.careerBridge.repository.RoleRepository;
+import com.jobPortal.careerBridge.repository.UserProfileRepository;
 import com.jobPortal.careerBridge.repository.UserRepository;
 import com.jobPortal.careerBridge.security.CustomUserDetails;
 import com.jobPortal.careerBridge.security.JwtService;
@@ -31,7 +33,7 @@ public class AuthService {
    private final RefreshTokenService refreshTokenService;
    private final EmailVerificationService emailVerificationService;
    private final EmailService emailService;
-
+   private final UserProfileRepository userProfileRepository;
     @Autowired
     public AuthService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
@@ -40,7 +42,8 @@ public class AuthService {
                        JwtService jwtService,
                        RefreshTokenService refreshTokenService,
                        EmailVerificationService emailVerificationService,
-                       EmailService emailService){
+                       EmailService emailService,
+                       UserProfileRepository userProfileRepository){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
@@ -49,9 +52,10 @@ public class AuthService {
         this.refreshTokenService = refreshTokenService;
         this.emailVerificationService = emailVerificationService;
         this.emailService = emailService;
-
+        this.userProfileRepository = userProfileRepository;
     }
 
+    @Transactional
     public UserResponse register(RegistrationRequest request){
         String email = request.getEmail();
         if(userRepository.existsByEmail(email)){
@@ -75,6 +79,15 @@ public class AuthService {
         );
         user.addRole(jobSeekerRole);
         userRepository.save(user);
+        UserProfile userProfile = new UserProfile(
+                user,
+                null,
+                null,
+                null,
+                LocalDateTime.now(),
+                LocalDateTime.now()
+        );
+        userProfileRepository.save(userProfile);
         String emailVerificationToken =
                 emailVerificationService.
                         createVerificationToken(user);

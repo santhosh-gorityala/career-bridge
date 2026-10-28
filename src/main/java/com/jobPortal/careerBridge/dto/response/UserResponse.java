@@ -1,4 +1,4 @@
-package com.jobPortal.careerBridge.dto;
+package com.jobPortal.careerBridge.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,0 +1,2 @@
+-- V9 schema changes were already applied manually.
+-- This migration exists to synchronize Flyway history.

@@ -2,10 +2,9 @@ package com.jobPortal.careerBridge.exception;
 
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.jobPortal.careerBridge.dto.ErrorResponse;
+import com.jobPortal.careerBridge.dto.response.ErrorResponse;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -117,6 +116,60 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(error);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleResourceNotFound(
+            ResourceNotFoundException ex,
+            HttpServletRequest request
+    ){
+        ErrorResponse error = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND.value(),
+                "RESOURCE_NOT_FOUND",
+                ex.getMessage(),
+                request.getRequestURI(),
+                null,
+                null
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(SkillAlreadyAddedException.class)
+    public ResponseEntity<ErrorResponse> handleSkillAlreadyAdded(
+            SkillAlreadyAddedException ex,
+            HttpServletRequest request
+    ){
+       ErrorResponse error = new ErrorResponse(
+              LocalDateTime.now(),
+              HttpStatus.CONFLICT.value(),
+               "SKILL_ALREADY_ADDED",
+               ex.getMessage(),
+               request.getRequestURI(),
+               null,
+               null
+       ) ;
+       return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(InvalidWorkExperienceException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidWorkExperience(
+        InvalidWorkExperienceException ex,
+        HttpServletRequest request
+    ){
+        ErrorResponse error =
+                new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.BAD_REQUEST.value(),
+                        "INVALID_WORK_EXPERIENCE",
+                        ex.getMessage(),
+                        request.getRequestURI(),
+                        null,
+                        null
+                );
+        return ResponseEntity.
+                status(HttpStatus.BAD_REQUEST).
+                body(error);
     }
 
     @ExceptionHandler(AuthorizationDeniedException.class)

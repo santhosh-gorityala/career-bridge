@@ -86,5 +86,8 @@ public class User {
         this.emailVerified = true;
     }
 
+    @OneToOne(mappedBy = "user",fetch = FetchType.LAZY)
+    private UserProfile userProfile;
+
 
 }

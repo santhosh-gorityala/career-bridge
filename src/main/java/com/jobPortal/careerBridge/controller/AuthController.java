@@ -1,6 +1,10 @@
 package com.jobPortal.careerBridge.controller;
 
-import com.jobPortal.careerBridge.dto.*;
+import com.jobPortal.careerBridge.dto.request.LoginRequest;
+import com.jobPortal.careerBridge.dto.request.RefreshTokenRequest;
+import com.jobPortal.careerBridge.dto.request.RegistrationRequest;
+import com.jobPortal.careerBridge.dto.response.LoginResponse;
+import com.jobPortal.careerBridge.dto.response.UserResponse;
 import com.jobPortal.careerBridge.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

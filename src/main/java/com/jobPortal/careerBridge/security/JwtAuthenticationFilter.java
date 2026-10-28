@@ -1,6 +1,6 @@
 package com.jobPortal.careerBridge.security;
 
-import com.jobPortal.careerBridge.dto.ErrorResponse;
+import com.jobPortal.careerBridge.dto.response.ErrorResponse;
 import com.jobPortal.careerBridge.service.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

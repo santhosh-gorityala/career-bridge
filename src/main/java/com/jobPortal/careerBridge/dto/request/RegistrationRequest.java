@@ -1,4 +1,4 @@
-package com.jobPortal.careerBridge.dto;
+package com.jobPortal.careerBridge.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
