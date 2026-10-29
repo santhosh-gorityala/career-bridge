@@ -172,6 +172,26 @@ public class GlobalExceptionHandler {
                 body(error);
     }
 
+    @ExceptionHandler(InvalidEducationException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidEducation(
+            InvalidEducationException ex,
+            HttpServletRequest request
+    ){
+        ErrorResponse error =
+                new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.BAD_REQUEST.value(),
+                        "INVALID_EDUCATION_DETAILS",
+                        ex.getMessage(),
+                        request.getRequestURI(),
+                        null,
+                        null
+                        );
+        return ResponseEntity.
+                status(HttpStatus.BAD_REQUEST).
+                body(error);
+    }
+
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAuthorizationDenied(
             AuthorizationDeniedException ex,
