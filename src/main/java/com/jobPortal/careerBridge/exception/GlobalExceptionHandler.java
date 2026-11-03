@@ -192,6 +192,43 @@ public class GlobalExceptionHandler {
                 body(error);
     }
 
+    @ExceptionHandler(InvalidResumeFileException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidResumeFile(
+            InvalidResumeFileException ex,
+            HttpServletRequest request
+    ){
+        ErrorResponse error =
+                new ErrorResponse(
+                        LocalDateTime.now(),
+                        HttpStatus.BAD_REQUEST.value(),
+                        "INVALID_RESUME_FILE",
+                        ex.getMessage(),
+                        request.getRequestURI(),
+                        null,
+                        null
+                );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(ResumeAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleResumeAlreadyExists(
+            ResumeAlreadyExistsException ex,
+            HttpServletRequest request
+    ){
+        ErrorResponse error = new ErrorResponse(
+          LocalDateTime.now(),
+          HttpStatus.CONFLICT.value(),
+          "RESUME_ALREADY_EXISTS",
+                ex.getMessage(),
+                request.getRequestURI(),
+                null,
+                null
+        );
+        return ResponseEntity.
+                status(HttpStatus.CONFLICT).
+                body(error);
+    }
+
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAuthorizationDenied(
             AuthorizationDeniedException ex,
