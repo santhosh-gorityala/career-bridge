@@ -229,6 +229,25 @@ public class GlobalExceptionHandler {
                 body(error);
     }
 
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessRule(
+            BusinessRuleException ex,
+            HttpServletRequest request
+    ){
+        ErrorResponse error = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                "BUSINESS_RULE_VIOLATION",
+                ex.getMessage(),
+                request.getRequestURI(),
+                null,
+                null
+        );
+        return ResponseEntity.
+                status(HttpStatus.CONFLICT).
+                body(error);
+    }
+
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAuthorizationDenied(
             AuthorizationDeniedException ex,
