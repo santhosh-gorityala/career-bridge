@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByIdWithRolesAndPermissions(userId)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found"));
-
+        
         return new CustomUserDetails(user);
     }
 

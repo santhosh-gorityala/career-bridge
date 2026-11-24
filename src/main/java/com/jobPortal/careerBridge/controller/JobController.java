@@ -1,8 +1,11 @@
 package com.jobPortal.careerBridge.controller;
 
 import com.jobPortal.careerBridge.dto.request.JobRequest;
+import com.jobPortal.careerBridge.dto.request.JobSearchRequest;
 import com.jobPortal.careerBridge.dto.response.JobResponse;
+import com.jobPortal.careerBridge.dto.response.PageResponse;
 import com.jobPortal.careerBridge.entity.Job;
+import com.jobPortal.careerBridge.service.JobSearchService;
 import com.jobPortal.careerBridge.service.JobService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +22,13 @@ import java.util.List;
 public class JobController {
 
     private final JobService jobService;
+    private final JobSearchService jobSearchService;
 
     @Autowired
-    public JobController(JobService jobService){
+    public JobController(JobService jobService,
+                         JobSearchService jobSearchService){
         this.jobService = jobService;
+        this.jobSearchService = jobSearchService;
     }
 
     @PostMapping
@@ -118,5 +124,23 @@ public class JobController {
                 status(HttpStatus.NO_CONTENT).
                 build();
     }
+
+
+    @GetMapping
+    @PreAuthorize("hasAuthority('JOB_VIEW')")
+    public ResponseEntity<PageResponse<JobResponse>> searchJobs(
+            @Valid @ModelAttribute JobSearchRequest jobSearchRequest,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "DESC") String direction
+            ){
+        PageResponse<JobResponse> pageJobResponse =
+                jobSearchService.searchJobs(jobSearchRequest,page,size,sortBy,direction);
+        return ResponseEntity.
+                status(HttpStatus.OK).
+                body(pageJobResponse);
+    }
+
 
 }

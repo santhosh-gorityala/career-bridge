@@ -46,7 +46,6 @@ public class JwtService {
                     .verifyWith(secretKey)
                     .build()
                     .parseSignedClaims(token);
-
             return true;
         } catch (Exception e) {
             return false;

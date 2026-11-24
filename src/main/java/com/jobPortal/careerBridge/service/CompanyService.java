@@ -3,8 +3,11 @@ package com.jobPortal.careerBridge.service;
 import com.jobPortal.careerBridge.dto.request.CompanyRequest;
 import com.jobPortal.careerBridge.dto.response.CompanyResponse;
 import com.jobPortal.careerBridge.entity.Company;
+import com.jobPortal.careerBridge.entity.CompanyMembership;
 import com.jobPortal.careerBridge.entity.User;
+import com.jobPortal.careerBridge.enums.CompanyMembershipStatus;
 import com.jobPortal.careerBridge.exception.ResourceNotFoundException;
+import com.jobPortal.careerBridge.repository.CompanyMembershipRepository;
 import com.jobPortal.careerBridge.repository.CompanyRepository;
 import com.jobPortal.careerBridge.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +24,18 @@ public class CompanyService {
     private final CompanyRepository companyRepository;
     private final CurrentUserService currentUserService;
     private final UserRepository userRepository;
+    private final CompanyMembershipRepository companyMembershipRepository;
     @Autowired
     public CompanyService(
             CompanyRepository companyRepository,
             CurrentUserService currentUserService,
-            UserRepository userRepository
+            UserRepository userRepository,
+            CompanyMembershipRepository companyMembershipRepository
     ){
         this.companyRepository = companyRepository;
         this.currentUserService = currentUserService;
         this.userRepository = userRepository;
+        this.companyMembershipRepository = companyMembershipRepository;
     }
 
     @Transactional
@@ -61,6 +67,16 @@ public class CompanyService {
 
         Company savedCompany =
                 companyRepository.save(company);
+
+        // Automatically make the company owner an active member
+        CompanyMembership membership =
+                    new CompanyMembership(
+                            savedCompany,
+                            owner,
+                            CompanyMembershipStatus.ACTIVE
+                    );
+        companyMembershipRepository.save(membership);
+
         return mapToResponse(savedCompany);
 
     }

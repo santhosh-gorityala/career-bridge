@@ -17,4 +17,6 @@ public interface FileStorageService {
             String storageKey
     );
 
+    void copy(String sourceKey,String destinationKey);
+
 }

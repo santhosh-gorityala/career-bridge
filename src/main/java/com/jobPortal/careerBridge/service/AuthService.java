@@ -103,10 +103,10 @@ public class AuthService {
 
     public LoginResponse authenticate(LoginRequest request){
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
         );
         CustomUserDetails userDetails =
                 (CustomUserDetails)authentication.getPrincipal();

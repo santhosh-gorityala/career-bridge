@@ -232,7 +232,7 @@ public class JobService {
         jobRepository.delete(savedJob);
     }
 
-    public JobResponse mapToResponse(Job savedJob){
+    private JobResponse mapToResponse(Job savedJob){
         return new JobResponse(
                 savedJob.getId(),
                 savedJob.getCompany().getId(),

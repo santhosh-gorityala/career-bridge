@@ -2,6 +2,7 @@ package com.jobPortal.careerBridge.exception;
 
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.jobPortal.careerBridge.dto.response.ErrorResponse;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -245,6 +247,64 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity.
                 status(HttpStatus.CONFLICT).
+                body(error);
+    }
+
+    @ExceptionHandler(InvalidSearchParameterException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidSearchParameter(
+            InvalidSearchParameterException ex,
+            HttpServletRequest request
+    ){
+        ErrorResponse error = new ErrorResponse(
+          LocalDateTime.now(),
+          HttpStatus.BAD_REQUEST.value(),
+          "INVALID_SEARCH_PARAMETER",
+          ex.getMessage(),
+          request.getRequestURI(),
+          null,
+          null
+        );
+        return ResponseEntity.
+                status(HttpStatus.BAD_REQUEST).
+                body(error);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(
+            IllegalArgumentException ex,
+            HttpServletRequest request
+    ){
+
+        ErrorResponse error = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST.value(),
+                "BAD_REQUEST",
+                ex.getMessage(),
+                request.getRequestURI(),
+                null,
+                null
+        );
+        return ResponseEntity.
+                status(HttpStatus.BAD_REQUEST).
+                body(error);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(
+            AccessDeniedException ex,
+            HttpServletRequest request
+    ){
+        ErrorResponse error = new ErrorResponse(
+          LocalDateTime.now(),
+                HttpStatus.FORBIDDEN.value(),
+                "FORBIDDEN",
+                ex.getMessage(),
+                request.getRequestURI(),
+                null,
+                null
+        );
+        return ResponseEntity.
+                status(HttpStatus.FORBIDDEN).
                 body(error);
     }
 
