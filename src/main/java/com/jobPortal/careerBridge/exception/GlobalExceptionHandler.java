@@ -2,7 +2,6 @@ package com.jobPortal.careerBridge.exception;
 
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.jobPortal.careerBridge.dto.response.ErrorResponse;
@@ -40,6 +39,25 @@ public class GlobalExceptionHandler {
                 errors
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(FeedbackAlreadySubmittedException.class)
+    public ResponseEntity<ErrorResponse> handleFeedbackAlreadySubmitted(
+            FeedbackAlreadySubmittedException ex,
+            HttpServletRequest request
+    ){
+        ErrorResponse error = new ErrorResponse(
+        LocalDateTime.now(),
+        409,
+        "FEEDBACK_ALREADY_SUBMITTED",
+        ex.getMessage(),
+        request.getRequestURI(),
+        null,
+        null
+        );
+        return ResponseEntity.
+                status(HttpStatus.CONFLICT).
+                body(error);
     }
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
